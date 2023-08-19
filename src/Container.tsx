@@ -1,4 +1,3 @@
-import update from 'immutability-helper'
 import type { FC } from 'react'
 import { useCallback, useState } from 'react'
 
@@ -51,14 +50,13 @@ export const Container: FC = () => {
     ])
 
     const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
-      setCards((prevCards: Item[]) =>
-        update(prevCards, {
-          $splice: [
-            [dragIndex, 1],
-            [hoverIndex, 0, prevCards[dragIndex] as Item],
-          ],
-        }),
-      )
+      setCards((prev) => {
+        const newCards = [...prev];
+        const draggedCard = newCards[dragIndex];
+        newCards.splice(dragIndex, 1);
+        newCards.splice(hoverIndex, 0, draggedCard);
+        return newCards;
+      });
     }, [])
 
     const renderCard = useCallback(
